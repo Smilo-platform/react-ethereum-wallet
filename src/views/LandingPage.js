@@ -134,7 +134,7 @@ const GethPortText = props => {
       <strong>
         <span style={{ color: 'Peru' }}> default port </span>
       </strong>
-      for Geth or Parity. Consider configuring your node with a different port.
+      for GO-SMILO (GETH) Consider configuring your node with a different port.
     </div>
   );
 };
@@ -352,7 +352,7 @@ export class LandingPage extends Component {
               </div>
             ) : (
               <div>
-                Ethereum{' '}
+                Smilo{' '}
                 <strong>
                   <span style={{ color: 'green' }}>MAIN NET</span>
                 </strong>

@@ -7,7 +7,16 @@ import { updateCurrency } from '../../actions/actions';
 
 import '../../stylesheets/mergedstyles.css';
 
-const selectableUnits = ['ether', 'finney', 'btc', 'usd', 'eur', 'gbp', 'brl'];
+const selectableUnits = [
+  'xsm',
+  'ether',
+  'finney',
+  'btc',
+  'usd',
+  'eur',
+  'gbp',
+  'brl',
+];
 
 class SelectableUnit extends Component {
   constructor(props) {
