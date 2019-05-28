@@ -130,7 +130,7 @@ export const DefaultAccountList = [
     buttonClass: 'wallet-box create add-account',
     buttonDescription: 'ADD ACCOUNT',
     contractDescription:
-      "Accounts are password protected keys that can hold Ether and Ethereum-based tokens. They can control contracts, but can't display incoming transactions.",
+      "Accounts are password protected keys that can hold Ether and Smilo-based tokens. They can control contracts, but can't display incoming transactions.",
   },
   {
     title: 'Wallet Contracts',
@@ -168,7 +168,7 @@ export const ContractSectionList = {
     buttonClass: 'wallet-box create add-token',
     buttonDescription: 'WATCH CUSTOM TOKEN',
     contractDescription:
-      'Tokens are currencies and other fungibles built on the Ethereum platform. In order for accounts to watch for tokens and send them, you have to add their address to this list. You can create your own token by simply modifying this example of a custom token contract or learning more about Ethereum Tokens.',
+      'Tokens are currencies and other fungibles built on the Smilo platform. In order for accounts to watch for tokens and send them, you have to add their address to this list. You can create your own token by simply modifying this example of a custom token contract or learning more about Ethereum Tokens.',
   },
 };
 export const DefaultContractList = [
@@ -196,6 +196,6 @@ export const DefaultContractList = [
     buttonClass: 'wallet-box create add-token',
     buttonDescription: 'WATCH CUSTOM TOKEN',
     contractDescription:
-      'Tokens are currencies and other fungibles built on the Ethereum platform. In order for accounts to watch for tokens and send them, you have to add their address to this list. You can create your own token by simply modifying this example of a custom token contract or learning more about Ethereum Tokens.',
+      'Tokens are currencies and other fungibles built on the Smilo platform. In order for accounts to watch for tokens and send them, you have to add their address to this list. You can create your own token by simply modifying this example of a custom token contract or learning more about Ethereum Tokens.',
   },
 ];

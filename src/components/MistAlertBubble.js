@@ -50,7 +50,7 @@ export class MistAlertBubble extends Component {
           <p>
             Due to a vulnerability affecting all released versions of the Mist
             beta browser, we urge you for the time being, not to browse
-            untrusted websites with Mist. Users of "Ethereum Wallet" desktop app
+            untrusted websites with Mist. Users of "Smilo Wallet" desktop app
             are not affected.
           </p>
           <p>
@@ -65,7 +65,7 @@ export class MistAlertBubble extends Component {
               className="hide-alert button download-button"
               href="https://github.com/ethereum/mist/releases"
             >
-              Download Ethereum Wallet
+              Download Smilo Wallet
             </a>
           </p>
         </section>

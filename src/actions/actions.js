@@ -4,9 +4,11 @@ import { actionTypes } from './actionTypes.js';
 // let socket = io('wss://streamer.cryptocompare.com')
 
 // const web3 = new Web3('ws://127.0.0.1:8546');
-const web3 = new Web3(
-  'https://mainnet.infura.io/v3/2e1f7de617754b72a8a61bef3f7de966'
-);
+// const web3 = new Web3(
+//   'https://mainnet.infura.io/v3/2e1f7de617754b72a8a61bef3f7de966'
+// );
+
+const web3 = new Web3('http://127.0.0.1:8546');
 
 export const updateContractName = name => dispatch => {
   dispatch({

@@ -7,7 +7,7 @@ import { displayModal, fetchTokensForAutoScan } from '../actions/actions';
 
 const buttonTitle = 'Custom Tokens';
 const buttonDescription =
-  'Tokens are currencies and other fungibles built on the Ethereum platform. In order for accounts to watch for tokens and send them, you have to add their address to this list. You can create your own token by simply modifying this example of a custom token contract or learning more about Ethereum Tokens.';
+  'Tokens are currencies and other fungibles built on the Smilo platform. In order for accounts to watch for tokens and send them, you have to add their address to this list. You can create your own token by simply modifying this example of a custom token contract or learning more about Ethereum Tokens.';
 
 export class CustomTokens extends Component {
   shouldComponentUpdate(prevProps, prevState) {

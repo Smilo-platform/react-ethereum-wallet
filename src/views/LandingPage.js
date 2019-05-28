@@ -108,7 +108,7 @@ const theme = createMuiTheme({
 const WelcomeText = props => {
   return (
     <React.Fragment>
-      <p>To use this dApp, you will need to connect to the Ethereum network.</p>
+      <p>To use this dApp, you will need to connect to the Smilo network.</p>
       <p>
         If you do not have any accounts, or if you are unfamiliar with these
         networks, please select the Infura Provider on the Mainnet.
@@ -116,8 +116,8 @@ const WelcomeText = props => {
       <p>
         You can still interact with the blockchain with Infura, but you will
         &nbsp;
-        <strong>not be at risk of losing Ether or Tokens</strong> as you will
-        not be connected to an account or wallet.
+        <strong>not be at risk of losing XSM or Tokens</strong> as you will not
+        be connected to an account or wallet.
       </p>
       <p>
         If you are unfamiliar with any of these networks, you can learn more
@@ -188,10 +188,7 @@ export class LandingPage extends Component {
         </div>
         <div className={classes.column}>
           Advanced
-          <ul className={classes.ul}>
-            {this.renderLink('Geth')}
-            {this.renderLink('Parity')}
-          </ul>
+          <ul className={classes.ul}>{this.renderLink('Geth')}</ul>
         </div>
       </div>
     );
@@ -210,7 +207,7 @@ export class LandingPage extends Component {
           Dev Button -> Go to Accounts
           <NotInterestedSharp className={classes.rightIcon} />
         </Button>
-        <h1>Welcome to your Ethereum Browser Wallet.</h1>
+        <h1>Welcome to your Smilo Browser Wallet.</h1>
         <div>
           <WelcomeText />
           {this.renderIntroLinks()}
@@ -350,7 +347,7 @@ export class LandingPage extends Component {
                 <strong>
                   <span style={{ color: 'Peru' }}>TEST NET</span>
                 </strong>
-                . Ether or token balances have
+                . XSM or token balances have
                 <em> no real world value.</em>
               </div>
             ) : (
@@ -405,7 +402,7 @@ export class LandingPage extends Component {
             // className={classes.button}
             onClick={e => this.setProviderConfig(e)}
           >
-            Connect to Ethereum
+            Connect to Smilo
             <OfflineBoltSharp className={classes.rightIcon} />
           </Button>
         </MuiThemeProvider>

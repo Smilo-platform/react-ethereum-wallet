@@ -74,7 +74,8 @@
     "test": "CI=TRUE react-scripts test --env=jsdom --no-coverage",
     "eject": "react-scripts eject",
     "lint:watch": "esw -w src",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "smilo": "geth --testnet --ws --wsorigins \"*\" --wsaddr 0.0.0.0 --wsapi personal,admin,db,eth,net,web3,miner,shh,txpool,debug --rpc --rpcaddr 0.0.0.0 --rpccorsdomain \"*\" --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,smilobft,sport --syncmode \"light\""
   },
   "devDependencies": {
     "babel-plugin-react-intl": "^2.4.0",
