@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 // import onClickOutside from "react-onclickoutside";
 import shortid from 'shortid';
 
-import { updateCurrency } from '../../actions/actions.js';
+import { updateCurrency } from '../../actions/actions';
 
 import '../../stylesheets/mergedstyles.css';
+
+const selectableUnits = ['ether', 'finney', 'btc', 'usd', 'eur', 'gbp', 'brl'];
 
 class SelectableUnit extends Component {
   constructor(props) {
@@ -37,39 +39,33 @@ class SelectableUnit extends Component {
     }
   }
 
+  renderList() {
+    return (
+      <React.Fragment>
+        {selectableUnits.map(item => (
+          <li key={shortid.generate()}>
+            <button data-value={item} onClick={this.unitSelected}>
+              {item.toUpperCase()}
+            </button>
+          </li>
+        ))}
+      </React.Fragment>
+    );
+  }
+
   render() {
-    let selectableUnits = [
-      'ether',
-      'finney',
-      'btc',
-      'usd',
-      'eur',
-      'gbp',
-      'brl',
-    ];
-    let cn = require('classnames');
-    let newClasses = cn({
+    const cn = require('classnames');
+    const newClasses = cn({
       'simple-modal': true,
       animate: this.state.displaySU,
     });
-
     return (
       <div
         id="selectableUnitDrawer"
         className={newClasses}
         ref={node => (this.node = node)}
       >
-        <ul>
-          {selectableUnits.map(item => {
-            return (
-              <li key={shortid.generate()}>
-                <button data-value={item} onClick={this.unitSelected}>
-                  {item.toUpperCase()}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+        <ul>{this.renderList()}</ul>
       </div>
     );
   }

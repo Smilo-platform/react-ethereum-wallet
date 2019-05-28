@@ -1,17 +1,17 @@
 /**
 Helper functions
-**/
+* */
 
 /**
 The Helpers class containing helper functions
-**/
+* */
 // TODO
 // Helpers = {};
 
 /**
 Get the default contract example
 @method getDefaultContractExample
-**/
+* */
 // TODO
 // Helpers.getDefaultContractExample = function(withoutPragma) {
 //   var source =
@@ -40,7 +40,7 @@ Reruns functions reactively, based on an interval. Use it like so:
 
 
 @method rerun
-**/
+* */
 
 // Helpers.rerun = {
 //   '10s': new ReactiveTimer(10),
@@ -51,8 +51,8 @@ Reruns functions reactively, based on an interval. Use it like so:
 Sort method for accounts and wallets to sort by balance
 
 @method sortByBalance
-**/
-//TODO
+* */
+// TODO
 
 // Helpers.sortByBalance = function(a, b) {
 //   return !b.disabled &&
@@ -62,18 +62,18 @@ Sort method for accounts and wallets to sort by balance
 // };
 
 export function returnAddressName(address, props) {
-  let wallets = props.reducers.Wallets;
-  let walletArray = Object.keys(wallets).map(key => key);
-  let walletContracts = props.reducers.WalletContracts;
-  let walletContractArray = Object.keys(walletContracts).map(key => key);
-  let observedContracts = props.reducers.ObservedContracts;
-  let observedContractsArray = Object.keys(observedContracts).map(key => key);
-  let observedTokens = props.reducers.ObservedTokens;
-  let observedTokensArray = Object.keys(observedTokens).map(key => key);
+  const wallets = props.reducers.Wallets;
+  const walletArray = Object.keys(wallets).map(key => key);
+  const walletContracts = props.reducers.WalletContracts;
+  const walletContractArray = Object.keys(walletContracts).map(key => key);
+  const observedContracts = props.reducers.ObservedContracts;
+  const observedContractsArray = Object.keys(observedContracts).map(key => key);
+  const observedTokens = props.reducers.ObservedTokens;
+  const observedTokensArray = Object.keys(observedTokens).map(key => key);
   let name;
   if (walletArray.includes(address)) {
     name = wallets[address].name;
-    name ? name : 'Account ' + wallets[address];
+    name || `Account ${wallets[address]}`;
   } else if (walletContractArray.includes(address)) {
     name = walletContracts[address]['contract-name'];
   } else if (observedContractsArray.includes(address)) {
@@ -88,7 +88,7 @@ export function returnAddressName(address, props) {
 Sort method for accounts and wallets to sort by balance and remove empty addresses;
 
 @method sortByBalance
-**/
+* */
 export function sortByBalance(wallets) {
   return wallets
     .filter(wallet => wallet.balance != 0)
@@ -107,7 +107,7 @@ export function combineWallets(addresses, walletContracts) {
       })
       .concat(
         Object.keys(walletContracts).map(address => {
-          let contract = walletContracts[address];
+          const contract = walletContracts[address];
           return {
             ...walletContracts,
             address,
@@ -124,7 +124,7 @@ Return an account you own, from a list of accounts
 @method getOwnedAccountFrom
 @param {Array} accountList array of account addresses
 @return {Mixed} the account address of an account owned
-**/
+* */
 
 // TODO
 // Helpers.getOwnedAccountFrom = function(accountList) {
@@ -144,9 +144,9 @@ Return an account you own, from a list of accounts
 Clear localStorage
 
 @method getLocalStorageSize
-**/
+* */
 export function getLocalStorageSize(localStorage) {
-  var size = 0;
+  let size = 0;
   if (localStorage) {
     size += Object.keys(localStorage).map(key => {
       return (localStorage[key].length * 2) / 1024 / 1024;
@@ -165,16 +165,16 @@ Make a ID out of a given hash and prefix.
 */
 export function makeId(prefix, hash) {
   return typeof hash === 'string' || hash instanceof String
-    ? prefix + '_' + hash.replace('0x', '').substr(0, 10)
+    ? `${prefix}_${hash.replace('0x', '').substr(0, 10)}`
     : null;
 }
 
 // https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 export function makeID() {
-  var text = '';
-  var possible =
+  let text = '';
+  const possible =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for (var i = 0; i < 5; i++)
+  for (let i = 0; i < 5; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   return text;
 }
@@ -249,7 +249,7 @@ Shows a notification and plays a sound
 @param {String} i18nText
 @param {Object} the i18n values passed to the i18n text
 */
-//. TODO
+// . TODO
 // Helpers.showNotification = function(i18nText, values, callback) {
 //   if (Notification.permission === 'granted') {
 //     var notification = new Notification(
@@ -321,7 +321,7 @@ Reactive wrapper for the moment package.
 @method moment
 @param {String} time    a date object passed to moment function.
 @return {Object} the moment js package
-**/
+* */
 
 // TODO
 // export function moment(time) {
@@ -341,7 +341,7 @@ Formats a timestamp to any format given.
 @param {String} time         The timestamp, can be string or unix format
 @param {String} format       the format string, can also be "iso", to format to ISO string, or "fromnow"
 @return {String} The formated time
-**/
+* */
 
 // TODO
 // Helpers.formatTime = function(time, format) {
@@ -375,7 +375,7 @@ Formats a given transactions balance
 @param {Object} exchangeRates  the exchange rates to use
 @param {String} unit  the unit to format to
 @return {String} The formated value
-**/
+* */
 
 // TODO
 // Helpers.formatTransactionBalance = function(value, exchangeRates, unit) {
@@ -410,7 +410,7 @@ Formats an input and prepares it to be a template
 @method createTemplateDataFromInput
 @param {object} input           The input object, out of an ABI
 @return {object} input          The input object with added variables to make it into a template
-**/
+* */
 
 // TODO
 // Helpers.createTemplateDataFromInput = function(input, key) {
@@ -451,7 +451,7 @@ Adds the input value from a form field to the inputs array
 @param {object} inputs          The current inputs
 @param {object} currentInput   The current input
 @return {Array} array of parameter values
-**/
+* */
 // TODO
 // Helpers.addInputValue = function(inputs, currentInput, formField) {
 //   return (
@@ -530,7 +530,7 @@ Takes a camelcase and shows it with spaces
 @method toSentence
 @param {string} camelCase    A name in CamelCase or snake_case format
 @return {string} sentence    The same name, sanitized, with spaces
-**/
+* */
 // export function toSentence(inputString, noHTML) {
 //   console.log(inputString)
 //   if (typeof inputString === undefined) {
@@ -554,7 +554,7 @@ Takes a camelcase and shows it with spaces
 @method toSentence
 @param {string} camelCase    A name in CamelCase or snake_case format
 @return {string} sentence    The same name, sanitized, with spaces
-**/
+* */
 export function toSentence(str) {
   str = str
     .replace(/[^a-z0-9_]/gi, '')
@@ -575,7 +575,7 @@ Returns true if Main is the current network.
 
 @method isOnMainNetwork
 @return {Bool}
-**/
+* */
 // TODO
 // isOnMainNetwork() {
 //   return Session.get('network') == 'main';
@@ -583,18 +583,18 @@ Returns true if Main is the current network.
 
 /**
 ENS Functions
-**/
+* */
 export function sha3(web3, str, opt) {
-  return '0x' + web3.utils.sha3(str, opt).replace('0x', '');
+  return `0x${web3.utils.sha3(str, opt).replace('0x', '')}`;
 }
 
 // TODO
 export function namehash(name) {
-  var node =
+  let node =
     '0x0000000000000000000000000000000000000000000000000000000000000000';
   if (name !== '') {
-    var labels = name.split('.');
-    for (var i = labels.length - 1; i >= 0; i--) {
+    const labels = name.split('.');
+    for (let i = labels.length - 1; i >= 0; i--) {
       node = sha3(node + sha3(labels[i]).slice(2), { encoding: 'hex' });
     }
   }
@@ -602,289 +602,289 @@ export function namehash(name) {
 }
 
 // eslint-disable-next-line
-var ensContractAbi = [
-  {
-    constant: true,
-    inputs: [{ name: 'node', type: 'bytes32' }],
-    name: 'resolver',
-    outputs: [{ name: '', type: 'address' }],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [{ name: 'node', type: 'bytes32' }],
-    name: 'owner',
-    outputs: [{ name: '', type: 'address' }],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'node', type: 'bytes32' },
-      { name: 'label', type: 'bytes32' },
-      { name: 'owner', type: 'address' },
-    ],
-    name: 'setSubnodeOwner',
-    outputs: [],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'node', type: 'bytes32' },
-      { name: 'ttl', type: 'uint64' },
-    ],
-    name: 'setTTL',
-    outputs: [],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [{ name: 'node', type: 'bytes32' }],
-    name: 'ttl',
-    outputs: [{ name: '', type: 'uint64' }],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'node', type: 'bytes32' },
-      { name: 'resolver', type: 'address' },
-    ],
-    name: 'setResolver',
-    outputs: [],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'node', type: 'bytes32' },
-      { name: 'owner', type: 'address' },
-    ],
-    name: 'setOwner',
-    outputs: [],
-    payable: false,
-    type: 'function',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'node', type: 'bytes32' },
-      { indexed: false, name: 'owner', type: 'address' },
-    ],
-    name: 'Transfer',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'node', type: 'bytes32' },
-      { indexed: true, name: 'label', type: 'bytes32' },
-      { indexed: false, name: 'owner', type: 'address' },
-    ],
-    name: 'NewOwner',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'node', type: 'bytes32' },
-      { indexed: false, name: 'resolver', type: 'address' },
-    ],
-    name: 'NewResolver',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'node', type: 'bytes32' },
-      { indexed: false, name: 'ttl', type: 'uint64' },
-    ],
-    name: 'NewTTL',
-    type: 'event',
-  },
-];
+// var ensContractAbi = [
+//   {
+//     constant: true,
+//     inputs: [{ name: 'node', type: 'bytes32' }],
+//     name: 'resolver',
+//     outputs: [{ name: '', type: 'address' }],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: true,
+//     inputs: [{ name: 'node', type: 'bytes32' }],
+//     name: 'owner',
+//     outputs: [{ name: '', type: 'address' }],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: 'node', type: 'bytes32' },
+//       { name: 'label', type: 'bytes32' },
+//       { name: 'owner', type: 'address' },
+//     ],
+//     name: 'setSubnodeOwner',
+//     outputs: [],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: 'node', type: 'bytes32' },
+//       { name: 'ttl', type: 'uint64' },
+//     ],
+//     name: 'setTTL',
+//     outputs: [],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: true,
+//     inputs: [{ name: 'node', type: 'bytes32' }],
+//     name: 'ttl',
+//     outputs: [{ name: '', type: 'uint64' }],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: 'node', type: 'bytes32' },
+//       { name: 'resolver', type: 'address' },
+//     ],
+//     name: 'setResolver',
+//     outputs: [],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: 'node', type: 'bytes32' },
+//       { name: 'owner', type: 'address' },
+//     ],
+//     name: 'setOwner',
+//     outputs: [],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     anonymous: false,
+//     inputs: [
+//       { indexed: true, name: 'node', type: 'bytes32' },
+//       { indexed: false, name: 'owner', type: 'address' },
+//     ],
+//     name: 'Transfer',
+//     type: 'event',
+//   },
+//   {
+//     anonymous: false,
+//     inputs: [
+//       { indexed: true, name: 'node', type: 'bytes32' },
+//       { indexed: true, name: 'label', type: 'bytes32' },
+//       { indexed: false, name: 'owner', type: 'address' },
+//     ],
+//     name: 'NewOwner',
+//     type: 'event',
+//   },
+//   {
+//     anonymous: false,
+//     inputs: [
+//       { indexed: true, name: 'node', type: 'bytes32' },
+//       { indexed: false, name: 'resolver', type: 'address' },
+//     ],
+//     name: 'NewResolver',
+//     type: 'event',
+//   },
+//   {
+//     anonymous: false,
+//     inputs: [
+//       { indexed: true, name: 'node', type: 'bytes32' },
+//       { indexed: false, name: 'ttl', type: 'uint64' },
+//     ],
+//     name: 'NewTTL',
+//     type: 'event',
+//   },
+// ];
+
+// // eslint-disable-next-line
+// var resolverContractAbi = [
+//   {
+//     constant: true,
+//     inputs: [{ name: 'interfaceID', type: 'bytes4' }],
+//     name: 'supportsInterface',
+//     outputs: [{ name: '', type: 'bool' }],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: true,
+//     inputs: [
+//       { name: 'node', type: 'bytes32' },
+//       { name: 'contentTypes', type: 'uint256' },
+//     ],
+//     name: 'ABI',
+//     outputs: [
+//       { name: 'contentType', type: 'uint256' },
+//       { name: 'data', type: 'bytes' },
+//     ],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: 'node', type: 'bytes32' },
+//       { name: 'x', type: 'bytes32' },
+//       { name: 'y', type: 'bytes32' },
+//     ],
+//     name: 'setPubkey',
+//     outputs: [],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: true,
+//     inputs: [{ name: 'node', type: 'bytes32' }],
+//     name: 'content',
+//     outputs: [{ name: 'ret', type: 'bytes32' }],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: true,
+//     inputs: [{ name: 'node', type: 'bytes32' }],
+//     name: 'addr',
+//     outputs: [{ name: 'ret', type: 'address' }],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: 'node', type: 'bytes32' },
+//       { name: 'contentType', type: 'uint256' },
+//       { name: 'data', type: 'bytes' },
+//     ],
+//     name: 'setABI',
+//     outputs: [],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: true,
+//     inputs: [{ name: 'node', type: 'bytes32' }],
+//     name: 'name',
+//     outputs: [{ name: 'ret', type: 'string' }],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: 'node', type: 'bytes32' },
+//       { name: 'name', type: 'string' },
+//     ],
+//     name: 'setName',
+//     outputs: [],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: 'node', type: 'bytes32' },
+//       { name: 'hash', type: 'bytes32' },
+//     ],
+//     name: 'setContent',
+//     outputs: [],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: true,
+//     inputs: [{ name: 'node', type: 'bytes32' }],
+//     name: 'pubkey',
+//     outputs: [{ name: 'x', type: 'bytes32' }, { name: 'y', type: 'bytes32' }],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     constant: false,
+//     inputs: [
+//       { name: 'node', type: 'bytes32' },
+//       { name: 'addr', type: 'address' },
+//     ],
+//     name: 'setAddr',
+//     outputs: [],
+//     payable: false,
+//     type: 'function',
+//   },
+//   {
+//     inputs: [{ name: 'ensAddr', type: 'address' }],
+//     payable: false,
+//     type: 'constructor',
+//   },
+//   {
+//     anonymous: false,
+//     inputs: [
+//       { indexed: true, name: 'node', type: 'bytes32' },
+//       { indexed: false, name: 'a', type: 'address' },
+//     ],
+//     name: 'AddrChanged',
+//     type: 'event',
+//   },
+//   {
+//     anonymous: false,
+//     inputs: [
+//       { indexed: true, name: 'node', type: 'bytes32' },
+//       { indexed: false, name: 'hash', type: 'bytes32' },
+//     ],
+//     name: 'ContentChanged',
+//     type: 'event',
+//   },
+//   {
+//     anonymous: false,
+//     inputs: [
+//       { indexed: true, name: 'node', type: 'bytes32' },
+//       { indexed: false, name: 'name', type: 'string' },
+//     ],
+//     name: 'NameChanged',
+//     type: 'event',
+//   },
+//   {
+//     anonymous: false,
+//     inputs: [
+//       { indexed: true, name: 'node', type: 'bytes32' },
+//       { indexed: true, name: 'contentType', type: 'uint256' },
+//     ],
+//     name: 'ABIChanged',
+//     type: 'event',
+//   },
+//   {
+//     anonymous: false,
+//     inputs: [
+//       { indexed: true, name: 'node', type: 'bytes32' },
+//       { indexed: false, name: 'x', type: 'bytes32' },
+//       { indexed: false, name: 'y', type: 'bytes32' },
+//     ],
+//     name: 'PubkeyChanged',
+//     type: 'event',
+//   },
+// ];
 
 // eslint-disable-next-line
-var resolverContractAbi = [
-  {
-    constant: true,
-    inputs: [{ name: 'interfaceID', type: 'bytes4' }],
-    name: 'supportsInterface',
-    outputs: [{ name: '', type: 'bool' }],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [
-      { name: 'node', type: 'bytes32' },
-      { name: 'contentTypes', type: 'uint256' },
-    ],
-    name: 'ABI',
-    outputs: [
-      { name: 'contentType', type: 'uint256' },
-      { name: 'data', type: 'bytes' },
-    ],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'node', type: 'bytes32' },
-      { name: 'x', type: 'bytes32' },
-      { name: 'y', type: 'bytes32' },
-    ],
-    name: 'setPubkey',
-    outputs: [],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [{ name: 'node', type: 'bytes32' }],
-    name: 'content',
-    outputs: [{ name: 'ret', type: 'bytes32' }],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [{ name: 'node', type: 'bytes32' }],
-    name: 'addr',
-    outputs: [{ name: 'ret', type: 'address' }],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'node', type: 'bytes32' },
-      { name: 'contentType', type: 'uint256' },
-      { name: 'data', type: 'bytes' },
-    ],
-    name: 'setABI',
-    outputs: [],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [{ name: 'node', type: 'bytes32' }],
-    name: 'name',
-    outputs: [{ name: 'ret', type: 'string' }],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'node', type: 'bytes32' },
-      { name: 'name', type: 'string' },
-    ],
-    name: 'setName',
-    outputs: [],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'node', type: 'bytes32' },
-      { name: 'hash', type: 'bytes32' },
-    ],
-    name: 'setContent',
-    outputs: [],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [{ name: 'node', type: 'bytes32' }],
-    name: 'pubkey',
-    outputs: [{ name: 'x', type: 'bytes32' }, { name: 'y', type: 'bytes32' }],
-    payable: false,
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'node', type: 'bytes32' },
-      { name: 'addr', type: 'address' },
-    ],
-    name: 'setAddr',
-    outputs: [],
-    payable: false,
-    type: 'function',
-  },
-  {
-    inputs: [{ name: 'ensAddr', type: 'address' }],
-    payable: false,
-    type: 'constructor',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'node', type: 'bytes32' },
-      { indexed: false, name: 'a', type: 'address' },
-    ],
-    name: 'AddrChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'node', type: 'bytes32' },
-      { indexed: false, name: 'hash', type: 'bytes32' },
-    ],
-    name: 'ContentChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'node', type: 'bytes32' },
-      { indexed: false, name: 'name', type: 'string' },
-    ],
-    name: 'NameChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'node', type: 'bytes32' },
-      { indexed: true, name: 'contentType', type: 'uint256' },
-    ],
-    name: 'ABIChanged',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'node', type: 'bytes32' },
-      { indexed: false, name: 'x', type: 'bytes32' },
-      { indexed: false, name: 'y', type: 'bytes32' },
-    ],
-    name: 'PubkeyChanged',
-    type: 'event',
-  },
-];
-
-// eslint-disable-next-line
-var ensAddress = '0x314159265dd8dbb310642f98f50c066173c1259b';
+// var ensAddress = '0x314159265dd8dbb310642f98f50c066173c1259b';
 
 /**
 Returns a string, given an address
 
 @method getENSName
-**/
+* */
 
 // TODO
 // export function getENSName(address, network, callback) {

@@ -1,38 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectedWallet } from '../../actions/actions.js';
-import * as Utils from '../../utils/utils.js';
-// import * as Actions from '../../actions/actions.js';
 import NumberFormat from 'react-number-format';
-import TokenListForItems from './TokenListForItems.js';
 import { EthAddress, Identicon } from 'ethereum-react-components';
-
-// import shortid from 'shortid';
-
-export const Balance = props => {
-  let wallet = props.wallet;
-  return (
-    <React.Fragment>
-      {props.web3 && props.web3.web3Instance ? (
-        <NumberFormat
-          className="account-balance"
-          value={Utils.displayPriceFormatter(props, wallet.balance)}
-          displayType={'text'}
-          thousandSeparator={true}
-        />
-      ) : (
-        <NumberFormat
-          className="account-balance"
-          value={wallet.balance}
-          displayType={'text'}
-          thousandSeparator={true}
-        />
-      )}
-      <span> {props.currency} </span>
-    </React.Fragment>
-  );
-};
+import { selectedWallet } from '../../actions/actions';
+import { displayPriceFormatter } from '../../utils/utils';
+import TokenListForItems from './TokenListForItems';
 
 export class AccountItem extends Component {
   constructor(props) {
@@ -66,51 +39,53 @@ export class AccountItem extends Component {
   }
 
   renderBalance() {
-    let wallet = this.props.wallet;
+    const { wallet } = this.props;
     return (
       <React.Fragment>
-        {this.props.web3 && this.props.web3.web3Instance ? (
-          <NumberFormat
-            className="account-balance"
-            value={Utils.displayPriceFormatter(this.props, wallet.balance)}
-            displayType={'text'}
-            thousandSeparator={true}
-          />
-        ) : (
-          <NumberFormat
-            className="account-balance"
-            value={wallet.balance}
-            displayType={'text'}
-            thousandSeparator={true}
-          />
-        )}
+        <NumberFormat
+          className="account-balance"
+          value={displayPriceFormatter(this.props, wallet.balance)}
+          displayType="text"
+          thousandSeparator
+        />
         <span> {this.props.currency} </span>
       </React.Fragment>
     );
   }
 
+  renderTokens() {
+    const ot = this.props.ObservedTokens;
+    const tokenList = this.props.wallet.tokens;
+    const displayTokens =
+      (Object.keys(ot).length !== 0 && ot.constructor === Object) ||
+      tokenList !== undefined;
+    return (
+      <React.Fragment>
+        {displayTokens ? (
+          <TokenListForItems
+            addressType={this.props.addressType}
+            address={this.props.address}
+          />
+        ) : null}
+      </React.Fragment>
+    );
+  }
+
   renderName() {
-    let number = this.props.number;
-    let name = this.props.wallet.name;
+    const { number } = this.props;
+    const { name } = this.props.wallet;
     return (
       <h3 className="not-ens-name">
         <i className={this.props.icon} title="Account" />
         &nbsp;
-        {!name ? 'Account ' + number : name}
+        {!name ? `Account ${number}` : name}
       </h3>
     );
   }
 
   render() {
-    let address = this.props.address;
-    const AccountURL = '/account/' + address;
-
-    let ot = this.props.ObservedTokens;
-    let tokenList = this.props.wallet.tokens;
-
-    let displayTokens =
-      (Object.keys(ot).length !== 0 && ot.constructor === Object) ||
-      tokenList !== undefined;
+    const { address } = this.props;
+    const AccountURL = `/account/${address}`;
 
     return (
       <React.Fragment>
@@ -123,29 +98,11 @@ export class AccountItem extends Component {
             classes="dapp-identicon dapp-small"
             title
             size="small"
-            address={this.props.address}
+            address={address}
           />
-          {displayTokens ? (
-            <TokenListForItems
-              addressType={this.props.addressType}
-              address={this.props.address}
-            />
-          ) : null}
-
+          {this.renderTokens()}
           {this.renderName()}
-
-          {/*}
-          <Balance 
-            key={shortid.generate()}
-            reducers={this.props.reducers}
-            wallet={this.props.wallet}
-            web3={this.props.web3}
-            currency={this.props.currency}
-          />
-          */}
-
           {this.renderBalance()}
-
           <EthAddress short classes="account-id" address={address} />
         </Link>
       </React.Fragment>

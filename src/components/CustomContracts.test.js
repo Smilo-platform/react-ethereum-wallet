@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { ContractSectionList } from '../constants/FieldConstants.js';
+import { ContractSectionList } from '../constants/FieldConstants';
 
 describe('custom contracts html', () => {
   const CC = ContractSectionList.CustomContracts;
@@ -10,24 +10,6 @@ describe('custom contracts html', () => {
         <React.Fragment>
           <h2>{CC.title}</h2>
           <p>{CC.contractDescription}</p>
-          <div className="dapp-clear-fix" />
-        </React.Fragment>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('renders watch contract button', () => {
-    const tree = renderer
-      .create(
-        <React.Fragment>
-          <button
-            className={CC.buttonClass}
-            onClick={{ modals: { displayWatchContract: true } }}
-          >
-            <div className="account-pattern">+</div>
-            <h3>{CC.buttonDescription}</h3>
-          </button>
           <div className="dapp-clear-fix" />
         </React.Fragment>
       )

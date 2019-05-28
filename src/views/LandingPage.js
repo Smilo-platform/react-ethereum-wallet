@@ -23,8 +23,8 @@ import OfflineBoltSharp from '@material-ui/icons/OfflineBoltSharp';
 import Slide from '@material-ui/core/Slide';
 import green from '@material-ui/core/colors/green';
 
-import * as Actions from '../actions/actions.js';
-import * as Constants from './LandingPageTestConstants.js';
+import * as Actions from '../actions/actions';
+import * as Constants from './LandingPageTestConstants';
 
 // import * as bluetooth from 'node-bluetooth'
 
@@ -105,7 +105,41 @@ const theme = createMuiTheme({
   },
 });
 
-class LandingPage extends Component {
+const WelcomeText = props => {
+  return (
+    <React.Fragment>
+      <p>To use this dApp, you will need to connect to the Ethereum network.</p>
+      <p>
+        If you do not have any accounts, or if you are unfamiliar with these
+        networks, please select the Infura Provider on the Mainnet.
+      </p>
+      <p>
+        You can still interact with the blockchain with Infura, but you will
+        &nbsp;
+        <strong>not be at risk of losing Ether or Tokens</strong> as you will
+        not be connected to an account or wallet.
+      </p>
+      <p>
+        If you are unfamiliar with any of these networks, you can learn more
+        about connecting to the network by following these links:
+      </p>
+    </React.Fragment>
+  );
+};
+
+const GethPortText = props => {
+  return (
+    <div>
+      This is the
+      <strong>
+        <span style={{ color: 'Peru' }}> default port </span>
+      </strong>
+      for Geth or Parity. Consider configuring your node with a different port.
+    </div>
+  );
+};
+
+export class LandingPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -115,43 +149,19 @@ class LandingPage extends Component {
       providers: Constants.providerConstants,
       networks: Constants.networks,
     };
-
-    // const device = new bluetooth.DeviceINQ();
-    // device.listPairedDevices(console.log);
   }
 
   itemSelected(e) {
-    let type = e.target.getAttribute('name');
+    const type = e.target.getAttribute('name');
     if (type === 'provider')
       this.setState({ selectedProvider: e.target.value });
     if (type === 'network') this.setState({ selectedNetwork: e.target.value });
     if (type === 'port') this.setState({ selectedPort: e.target.value });
-    // if(e.target.value === 'Bluetooth'){
-    //   navigator.bluetooth.requestDevice(
-    //   {acceptAllDevices: true,optionalServices: ['battery_service']}
-    //   // {
-    //   //   filters: [{
-    //   //     services: [0x1234, 0x12345678, '99999999-0000-1000-8000-00805f9b34fb']
-    //   //   }]
-    //   // }
-    //   )
-    //   .then(device => {
-    //     console.log(device)
-    //     console.log(device.name)
-    //     console.log(device.name === "Kiel's iPhone")
-    //     if(device.name !== "Kiel's iPhone") return
-    //     // return device.gatt.connect();
-    //   })
-    //   .then(server => {
-    //     console.log(server)
-    //   })
-    //   .catch(error => { console.log(error)})
-    // }
   }
 
   // snapshotted
   renderLink(name) {
-    let provInfo = this.state.providers[name];
+    const provInfo = this.state.providers[name];
     return (
       <li>
         <a href={provInfo.link} target="_blank" rel="noopener noreferrer">
@@ -161,10 +171,36 @@ class LandingPage extends Component {
     );
   }
 
+  renderIntroLinks() {
+    const { classes } = this.props;
+    return (
+      <div className="links">
+        <div className={classes.column}>
+          Beginner
+          <ul className={classes.ul}>
+            {this.renderLink('Metamask')}
+            {this.renderLink('Infura')}
+          </ul>
+        </div>
+        <div className={classes.column}>
+          Medium
+          <ul className={classes.ul}>{this.renderLink('Ganache')}</ul>
+        </div>
+        <div className={classes.column}>
+          Advanced
+          <ul className={classes.ul}>
+            {this.renderLink('Geth')}
+            {this.renderLink('Parity')}
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
   renderIntroduction() {
     const { classes } = this.props;
     return (
-      <div className={'introduction container ' + classes.container}>
+      <div className={`introduction container ${classes.container}`}>
         <Button
           variant="contained"
           color="primary"
@@ -176,50 +212,15 @@ class LandingPage extends Component {
         </Button>
         <h1>Welcome to your Ethereum Browser Wallet.</h1>
         <div>
-          <p>
-            To use this dApp, you will need to connect to the Ethereum network.
-          </p>
-          <p>
-            If you do not have any accounts, or if you are unfamiliar with these
-            networks, please select the Infura Provider on the Mainnet.
-          </p>
-          <p>
-            You can still interact with the blockchain with Infura, but you will
-            &nbsp;
-            <strong>not be at risk of losing Ether or Tokens</strong> as you
-            will not be connected to an account or wallet.
-          </p>
-          <p>
-            If you are unfamiliar with any of these networks, you can learn more
-            about connecting to the network by following these links:
-          </p>
-          <div className="links">
-            <div className={classes.column}>
-              Beginner
-              <ul className={classes.ul}>
-                {this.renderLink('Metamask')}
-                {this.renderLink('Infura')}
-              </ul>
-            </div>
-            <div className={classes.column}>
-              Medium
-              <ul className={classes.ul}>{this.renderLink('Ganache')}</ul>
-            </div>
-            <div className={classes.column}>
-              Advanced
-              <ul className={classes.ul}>
-                {this.renderLink('Geth')}
-                {this.renderLink('Parity')}
-              </ul>
-            </div>
-          </div>
+          <WelcomeText />
+          {this.renderIntroLinks()}
         </div>
       </div>
     );
   }
 
   renderImage() {
-    let prov = this.state.selectedProvider;
+    const prov = this.state.selectedProvider;
     return (
       <Slide
         direction="up"
@@ -238,9 +239,9 @@ class LandingPage extends Component {
 
   renderProvider() {
     const { classes } = this.props;
-    let providers = this.state.providers;
+    const providers = this.state.providers;
     return (
-      <div className={'select-provider container ' + classes.container}>
+      <div className={`select-provider container ${classes.container}`}>
         <div className={classes.column}>Please select your provider:</div>
         <FormControl required className={classes.formControl}>
           <InputLabel htmlFor="provider-required">Provider</InputLabel>
@@ -273,10 +274,10 @@ class LandingPage extends Component {
 
   renderSelectPort() {
     const { classes } = this.props;
-    let prov = this.state.selectedProvider;
+    const prov = this.state.selectedProvider;
     return (
       <Collapse in={prov === 'Geth' || prov === 'Parity' || prov === 'Ganache'}>
-        <div className={'select-port container ' + classes.container}>
+        <div className={`select-port container ${classes.container}`}>
           <div className={classes.column}>Please select your port:</div>
           <FormControl required className={classes.formControl}>
             <TextField
@@ -310,12 +311,12 @@ class LandingPage extends Component {
 
   renderNetwork() {
     const { classes } = this.props;
-    let networks = this.state.networks;
-    let prov = this.state.selectedProvider;
-    let port = this.state.selectedPort;
+    const networks = this.state.networks;
+    const prov = this.state.selectedProvider;
+    const port = this.state.selectedPort;
     return (
       <Collapse in={prov === 'Metamask' || prov === 'Infura' || port !== ''}>
-        <div className={'select-network container ' + classes.container}>
+        <div className={`select-network container ${classes.container}`}>
           <div className={classes.column}>Please select your network:</div>
           <FormControl required className={classes.formControl}>
             <InputLabel htmlFor="network-required">Network</InputLabel>
@@ -387,7 +388,7 @@ class LandingPage extends Component {
   renderButtons() {
     const { classes } = this.props;
     return (
-      <div className={'container buttonContainer ' + classes.container}>
+      <div className={`container buttonContainer ${classes.container}`}>
         <Button
           variant="contained"
           color="primary"

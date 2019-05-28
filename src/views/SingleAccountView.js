@@ -2,27 +2,26 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // components
-import SU from '../components/elements/SelectableUnit.js';
-import AccountActionBar from '../components/elements/AccountActionBar.js';
-import LatestTransactions from '../components/elements/LatestTransactions.js';
-import NoMatchingTransaction from '../components/elements/NoMatchingTransaction.js';
-import TokenList from '../components/TokenList.js';
+import { Identicon } from 'ethereum-react-components';
+import SU from '../components/elements/SelectableUnit';
+import AccountActionBar from '../components/elements/AccountActionBar';
+import LatestTransactions from '../components/elements/LatestTransactions';
+import NoMatchingTransaction from '../components/elements/NoMatchingTransaction';
+import TokenList from '../components/TokenList';
 
-import EditableName from '../components/EditableName.js';
+import EditableName from '../components/EditableName';
 
 // views
-import NotFound from './NotFound.js';
+import NotFound from './NotFound';
 
 // utils and actions
-import * as Utils from '../utils/utils.js';
-import * as Actions from '../actions/actions.js';
+import { displayPriceFormatter } from '../utils/utils';
+import * as Actions from '../actions/actions';
 
-import { Identicon } from 'ethereum-react-components';
-
-export const StickyHeader = ({ sw }) => {
+export const StickyHeader = ({ address }) => {
   return (
     <div className="dapp-sticky-bar dapp-container">
-      <Identicon classes="dapp-identicon" title address={sw.address} />
+      <Identicon classes="dapp-identicon" title address={address} />
     </div>
   );
 };
@@ -31,16 +30,6 @@ export const AccountDetails = ({ sw }) => {
   return (
     <React.Fragment>
       <EditableName addressType="address" sw={sw} />
-      {/*
-      <h1>
-        {!sw.name ? (
-          <em className="edit-name">Account {sw.number}</em>
-        ) : (
-          <em className="edit-name">{sw.name}</em>
-        )}
-        <i className="edit-icon icon-pencil" />
-      </h1>
-    */}
       <h2 className="copyable-address">
         <i className="icon-key" title="Account" />
         <span>{sw.address}</span>
@@ -96,14 +85,13 @@ export class SingleAccountView extends Component {
   }
 
   renderAccountTransactions() {
-    let sw = this.props.reducers.selectedWallet;
-    let address = sw.address;
-    let transactions = this.props.reducers.Transactions;
-    let accountTxns = {};
+    const address = this.props.reducers.selectedWallet.address;
+    const transactions = this.props.reducers.Transactions;
+    const accountTxns = {};
     Object.keys(transactions).map(hash => {
       if (
-        transactions[hash]['from'] === address.toLowerCase() ||
-        transactions[hash]['to'] === address.toLowerCase()
+        transactions[hash].from === address.toLowerCase() ||
+        transactions[hash].to === address.toLowerCase()
       ) {
         accountTxns[hash] = transactions[hash];
       }
@@ -122,12 +110,10 @@ export class SingleAccountView extends Component {
   }
 
   renderBalance() {
-    let sw = this.props.reducers.selectedWallet;
+    const sw = this.props.reducers.selectedWallet;
     return (
       <span className="account-balance">
-        {this.props.web3 && this.props.web3.web3Instance
-          ? Utils.displayPriceFormatter(this.props, sw.wallet.balance)
-          : sw.wallet.balance}
+        {displayPriceFormatter(this.props, sw.wallet.balance)}
         <span className="inline-form" name="unit">
           <button
             type="button"
@@ -144,16 +130,14 @@ export class SingleAccountView extends Component {
   }
 
   renderSingleAccount() {
-    let sw = this.props.reducers.selectedWallet;
+    const sw = this.props.reducers.selectedWallet;
     return (
       <div className="dapp-container accounts-page">
-        <StickyHeader sw={sw} />
-
+        <StickyHeader address={sw.address} />
         {/*
         <EditableName addressType="address" />
         <EditableName addressType="address" />
         */}
-
         <div className="accounts-page-summary">
           <Identicon classes="dapp-identicon" title address={sw.address} />
           <header>
@@ -170,7 +154,7 @@ export class SingleAccountView extends Component {
   }
 
   render() {
-    let w = this.props.reducers.selectedWallet;
+    const w = this.props.reducers.selectedWallet;
     return w === undefined || w === '' ? (
       <NotFound />
     ) : (

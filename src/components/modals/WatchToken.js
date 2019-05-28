@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { tokenInterface } from '../../constants/TokenInterfaceConstant.js';
-import TokenBox from '../elements/TokenBox.js';
-import TestInputItem from '../elements/TestInputItem.js';
-import * as Actions from '../../actions/actions.js';
+import { tokenInterface } from '../../constants/TokenInterfaceConstant';
+import TokenBox from '../elements/TokenBox';
+import TestInputItem from '../elements/TestInputItem';
+import * as Actions from '../../actions/actions';
 
 class WatchToken extends Component {
   constructor(props) {
@@ -47,10 +47,10 @@ class WatchToken extends Component {
   }
 
   getTokenContractInfo(address) {
-    let web3 = this.props.web3.web3Instance;
-    let TokenContract = new web3.eth.Contract(tokenInterface);
+    const web3 = this.props.web3.web3Instance;
+    const TokenContract = new web3.eth.Contract(tokenInterface);
     TokenContract.options.address = address;
-    this.setState({ address: address });
+    this.setState({ address });
     this.props.updateTokenToWatch({
       name: 'address',
       value: address,
@@ -58,18 +58,18 @@ class WatchToken extends Component {
     this.invokeContractMethod(TokenContract, 'symbol');
     this.invokeContractMethod(TokenContract, 'name');
     this.invokeContractMethod(TokenContract, 'decimals');
-    // this.invokeContractMethod(TokenContract, 'balanceOf');
+    this.invokeContractMethod(TokenContract, 'totalSupply');
   }
 
   handleOnKeyUp(e) {
-    //TODO: this is getting called twice when using copy/paste with keyboard shortcuts
+    // TODO: this is getting called twice when using copy/paste with keyboard shortcuts
 
     // TODO:validate inputs here
 
-    let name = e.target.getAttribute('name');
-    let value = e.target.value;
+    const name = e.target.getAttribute('name');
+    const value = e.target.value;
 
-    let web3 = this.props.web3.web3Instance;
+    const web3 = this.props.web3.web3Instance;
     // TODO: checks coin symbol against MEW list?
     // var l = e.currentTarget.value.length;
     // if (!tokenAddress && l > 2 && l < 6) {
@@ -86,9 +86,9 @@ class WatchToken extends Component {
     //   return;
 
     if (name === 'address' && value.length === 42) {
-      let isAddress = web3.utils.isAddress(value);
-      let toCheckSum = web3.utils.toChecksumAddress(value);
-      let isCheckSummed = web3.utils.checkAddressChecksum(toCheckSum);
+      const isAddress = web3.utils.isAddress(value);
+      const toCheckSum = web3.utils.toChecksumAddress(value);
+      const isCheckSummed = web3.utils.checkAddressChecksum(toCheckSum);
       if (isAddress && isCheckSummed) {
         this.getTokenContractInfo(value);
         return;
@@ -97,7 +97,7 @@ class WatchToken extends Component {
 
     this.setState({ [name]: value });
     this.props.updateTokenToWatch({
-      name: name,
+      name,
       value: e.target.value,
     });
   }
@@ -109,46 +109,18 @@ class WatchToken extends Component {
 
   submitFunction(e) {
     let web3;
-    let token = this.props.reducers.TokenToWatch;
-    let address = token.address;
-
-    console.log('HERE IN SUBMIT FUNCTION', this.props);
-
+    const token = this.props.reducers.TokenToWatch;
+    const address = token.address;
     if (this.props.web3.web3Instance) {
-      web3 = this.props.web3.web3Instance;
-
-      //TODO: Global Notifications
-      // if(!web3.utils.isAddress(address)){
-      // }
-
-      //TODO: Global Notifications
-      // if(this.props.reducers.Tokens.includes(address)) {
-      // }
-
-      // TODO 0x70a08231000000000000000000000000 is the data for BALANCEoF
-      // needs to pass an ACCOUNT ADDRESS and not the contract address
-      web3.eth
-        .call({
-          to: address.replace(' ', ''), // contract address
-          // data: "0xc6888fa10000000000000000000000000000000000000000000000000000000000000003"
-          data: '0x70a08231000000000000000000000000', //+ account.substring(2).replace(' ', '')
-        })
-        .then(result => {
-          let tokenAmt = web3.utils.toBN(result);
-          // if (!tokenAmt.isZero()) {
-          this.props.addObservedToken({
-            address: token.address,
-            value: Object.assign({}, token, {
-              amount: web3.utils.fromWei(tokenAmt, 'ether'),
-            }),
-          });
-          this.props.displayGlobalNotification({
-            display: true,
-            type: 'success',
-            msg: 'Added custom token',
-          });
-          // }
-        });
+      this.props.addObservedToken({
+        address: token.address,
+        value: token,
+      });
+      this.props.displayGlobalNotification({
+        display: true,
+        type: 'success',
+        msg: 'Added custom token',
+      });
     } else {
       // TODO:trigger global notification here
     }
@@ -158,10 +130,10 @@ class WatchToken extends Component {
   render() {
     let divStyle;
     if (!this.props.display) divStyle = { display: 'none' };
-    var GeoPattern = require('geopattern');
-    var pattern = GeoPattern.generate('0x000', { color: '#CCC6C6' });
-    let iconStyle = { backgroundImage: pattern.toDataUrl() };
-    let TokenToWatch = this.props.reducers.TokenToWatch;
+    const GeoPattern = require('geopattern');
+    const pattern = GeoPattern.generate('0x000', { color: '#CCC6C6' });
+    const iconStyle = { backgroundImage: pattern.toDataUrl() };
+    const TokenToWatch = this.props.reducers.TokenToWatch;
 
     return (
       <div className={this.props.display} style={divStyle}>
@@ -213,21 +185,7 @@ class WatchToken extends Component {
           />
           <br />
           <h3>Preview</h3>
-          {/*<TokenBox key={TokenToWatch.address} token={TokenToWatch} />
-
-          {/*
-          <button className="wallet-box tokens" style={iconStyle}>
-            // <h3></h3> 
-            <button className="delete-token">
-              <i className="icon-trash" />
-            </button>
-            <span name="balance" className="account-balance">
-              {this.state.balance}
-              <span> </span>
-            </span>
-            <span className="account-id" />
-          </button>
-          */}
+          <TokenBox key={TokenToWatch.address} token={TokenToWatch} />
           <div className="dapp-modal-buttons">
             <button className="cancel" onClick={() => this.cancelFunction()}>
               Cancel

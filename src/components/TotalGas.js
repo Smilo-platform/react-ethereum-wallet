@@ -1,48 +1,64 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as Utils from '../utils/utils.js';
 import Web3 from 'web3';
+import { displayPriceFormatter } from '../utils/utils';
+
+const web3 = new Web3();
+
+const TokenInfo = ({ tx }) => {
+  return (
+    <React.Fragment>
+      <span className="amount">
+        &nbsp;
+        {tx.tokenAmount}
+      </span>
+      &nbsp;
+      {tx.tokenToSend.symbol}
+    </React.Fragment>
+  );
+};
+
+const EstimatedFee = ({ total }) => {
+  return (
+    <React.Fragment>
+      Estimated Fee: &nbsp;
+      {web3.utils.fromWei(total, 'ether')}
+      &nbsp; ETHER
+    </React.Fragment>
+  );
+};
 
 export class TotalGas extends Component {
+  renderTotal(total) {
+    const tx = this.props.TransactionToSend;
+    return (
+      <React.Fragment>
+        <h3>Total</h3>
+        {!tx.sendToken ? (
+          <span className="amount">
+            {` ${displayPriceFormatter(this.props, total)} ${
+              this.props.reducers.currency
+            }`}
+          </span>
+        ) : (
+          <TokenInfo transaction={tx} />
+        )}
+      </React.Fragment>
+    );
+  }
+
   render() {
-    let tx = this.props.TransactionToSend;
-    let val = Number(tx.value);
-    let gas = tx.gasPrice;
-
-    let total = !tx.sendToken ? val + gas : gas;
-
+    const tx = this.props.TransactionToSend;
+    const val = Number(tx.value);
+    let total = !tx.sendToken ? val + tx.gasPrice : tx.gasPrice;
     total = !isNaN(total) ? total : 0;
-
-    let web3 = new Web3();
     total = web3.utils.toBN(total);
     return (
       <div className="row clear total">
         <div className="col col-12 mobile-full">
-          <h3>total</h3>
-          {!tx.sendToken ? (
-            // will exist if provider connected, will be removing
-            <span className="amount">
-              {this.props.web3 && this.props.web3.web3Instance
-                ? ' ' +
-                  Utils.displayPriceFormatter(this.props, total) +
-                  ' ' +
-                  this.props.reducers.currency
-                : 0 + ' ' + this.props.reducers.currency}
-            </span>
-          ) : (
-            <React.Fragment>
-              <span className="amount">
-                &nbsp;
-                {tx.tokenAmount}
-              </span>
-              &nbsp;
-              {tx.tokenToSend.symbol}
-            </React.Fragment>
-          )}
+          {this.renderTotal(total)}
           <br />
-          Estimated Fee: &nbsp;
-          {web3.utils.fromWei(total, 'ether')}
-          &nbsp; ETHER
+          <EstimatedFee total={total} />
         </div>
         <div className="dapp-clear-fix" />
       </div>

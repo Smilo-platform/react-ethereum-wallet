@@ -14,11 +14,11 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-import WalletDropdown from '../components/elements/WalletDropdown.js';
 import shortid from 'shortid';
-import * as Actions from '../actions/actions.js';
-
 import { Identicon } from 'ethereum-react-components';
+import WalletDropdown from '../components/elements/WalletDropdown';
+import * as Actions from '../actions/actions';
+import { makeID } from '../utils/helperFunctions';
 
 import {
   WalletInterfaceItems,
@@ -80,7 +80,7 @@ const SelectOwner = () => {
   );
 };
 
-let dcfRadio = ['simpleChecked', 'multisigChecked', 'importWalletChecked'];
+const dcfRadio = ['simpleChecked', 'multisigChecked', 'importWalletChecked'];
 
 class NewWalletContract extends Component {
   constructor(props) {
@@ -91,30 +91,28 @@ class NewWalletContract extends Component {
     this.checkIfImportableWallet = this.checkIfImportableWallet.bind(this);
     this.handleChange = this.handleChange.bind(this);
     let defaultWallet;
-    let wallets = this.props.reducers.Wallets;
-    for (var prop in wallets) {
+    const wallets = this.props.reducers.Wallets;
+    for (const prop in wallets) {
       defaultWallet = prop;
       break;
     }
-    this.state.reducers.DeployContractForm['MainOwnerAddress'] = defaultWallet;
+    this.state.reducers.DeployContractForm.MainOwnerAddress = defaultWallet;
     this.state.reducers.DeployContractForm.multiSigContract.owners[0] = defaultWallet;
   }
 
   selectWallet(e) {
     // TODO:validate inputs here
-    let obj = { ...this.props.reducers.DeployContractForm };
+    const obj = { ...this.props.reducers.DeployContractForm };
     obj.MainOwnerAddress = e.target.value;
-    // this.props.updateMainContractAddress(obj);
     this.props.updateMainContractAddress({
       name: 'MainOwnerAddress',
       value: e.target.value,
     });
-    // this.props.updateDeployContractForm(obj);
   }
 
   shouldComponentUpdate(prevProps, prevState) {
-    let dcf = this.props.reducers.DeployContractForm;
-    let prevDcf = prevProps.reducers.DeployContractForm;
+    const dcf = this.props.reducers.DeployContractForm;
+    const prevDcf = prevProps.reducers.DeployContractForm;
     if (
       dcf !== prevDcf ||
       dcf.multiSigContract !== prevDcf.multiSigContract ||
@@ -126,8 +124,8 @@ class NewWalletContract extends Component {
   }
 
   checkIfImportableWallet(e) {
-    let dcf = this.props.reducers.DeployContractForm;
-    let address = dcf.importWalletAddress;
+    const dcf = this.props.reducers.DeployContractForm;
+    const address = dcf.importWalletAddress;
     let web3;
     if (this.props.web3 && this.props.web3.web3Instance) {
       web3 = this.props.web3.web3Instance;
@@ -146,9 +144,9 @@ class NewWalletContract extends Component {
       return false;
     }
 
-    let pendingConf = this.props.reducers.ContractsPendingConfirmations;
-    let wc = this.props.reducers.WalletContracts;
-    let walletContracts = Object.assign({}, pendingConf, wc);
+    const pendingConf = this.props.reducers.ContractsPendingConfirmations;
+    const wc = this.props.reducers.WalletContracts;
+    const walletContracts = Object.assign({}, pendingConf, wc);
     if (Object.keys(walletContracts).includes(address)) {
       this.props.displayGlobalNotification({
         display: true,
@@ -160,7 +158,7 @@ class NewWalletContract extends Component {
       return false;
     }
 
-    let originalABI = WalletInterfaceItems.walletStubABI;
+    const originalABI = WalletInterfaceItems.walletStubABI;
     return web3.eth.getCode(address).then((err, res) => {
       if (err) {
         this.props.displayGlobalNotification({
@@ -189,10 +187,9 @@ class NewWalletContract extends Component {
   }
 
   handleChange(e) {
-    let buttonValue = e.target.value;
-    let name = e.target.name;
+    const buttonValue = e.target.value;
+    const name = e.target.name;
     let obj = {};
-    console.log(buttonValue, name);
     switch (name) {
       case 'ContractToDeployRadio':
         obj = { ...this.props.reducers.DeployContractForm };
@@ -240,25 +237,15 @@ class NewWalletContract extends Component {
     }
   }
 
-  // https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
-  makeID() {
-    var text = '';
-    var possible =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (var i = 0; i < 5; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    return text;
-  }
-
   renderMultiSigOwners() {
-    let dcf = this.props.reducers.DeployContractForm;
-    let { ownerCount, owners } = dcf.multiSigContract;
+    const dcf = this.props.reducers.DeployContractForm;
+    const { ownerCount, owners } = dcf.multiSigContract;
     return (
       <React.Fragment>
         {[...Array(ownerCount).keys()].map((num, index) => (
           <TextField
             key={shortid.generate()}
-            id={index + '-multiSigAddress'}
+            id={`${index}-multiSigAddress`}
             onChange={e => this.handleChange(e)}
             data-name="multisigSigneesAddresses"
             name="multisigSigneesAddresses"
@@ -267,7 +254,7 @@ class NewWalletContract extends Component {
             value={
               index === 0
                 ? dcf.MainOwnerAddress
-                : typeof owners[index] == 'undefined'
+                : typeof owners[index] === 'undefined'
                 ? ''
                 : owners[index]
             }
@@ -282,8 +269,8 @@ class NewWalletContract extends Component {
                     address={
                       index === 0
                         ? dcf.MainOwnerAddress
-                        : typeof owners[index] == 'undefined'
-                        ? this.makeID()
+                        : typeof owners[index] === 'undefined'
+                        ? makeID()
                         : owners[index]
                     }
                   />
@@ -298,7 +285,7 @@ class NewWalletContract extends Component {
 
   validateMultipleAddress(web3, addresses) {
     const ownerSet = new Set(addresses);
-    let arr = [...ownerSet].map(address => web3.utils.isAddress(address));
+    const arr = [...ownerSet].map(address => web3.utils.isAddress(address));
     if (arr.includes(false)) {
       console.warn('invalid address');
       this.props.displayGlobalNotification({
@@ -325,7 +312,7 @@ class NewWalletContract extends Component {
     // this.checkIfImportableWallet(e)
 
     console.log('e in createContract', e);
-    let dcf = this.props.reducers.DeployContractForm;
+    const dcf = this.props.reducers.DeployContractForm;
     console.log(dcf);
 
     // TODO: finish up import wallet
@@ -337,20 +324,20 @@ class NewWalletContract extends Component {
     // }
     // return;
 
-    let msContract = dcf.multiSigContract;
-    let web3 = this.props.web3 ? this.props.web3.web3Instance : null;
+    const msContract = dcf.multiSigContract;
+    const web3 = this.props.web3 ? this.props.web3.web3Instance : null;
     // hardcoded bytecode
     // same for imported wallet - there is a web3 check to make the
     // code at the given address is identical to the walletStubABI
-    let code = WalletInterfaceItems.walletStubABI;
+    const code = WalletInterfaceItems.walletStubABI;
     // hardcoded JSON interface
-    let jsonInterface = WalletInterfaceItems.walletInterface;
-    let contract = new web3.eth.Contract(jsonInterface);
+    const jsonInterface = WalletInterfaceItems.walletInterface;
+    const contract = new web3.eth.Contract(jsonInterface);
     if (!web3) {
       return;
     }
 
-    let options = {
+    const options = {
       data: code,
       arguments: '',
       from: dcf.MainOwnerAddress.toLowerCase(),
@@ -375,12 +362,7 @@ class NewWalletContract extends Component {
     if (!valid) {
       return;
     }
-    console.log('past valid check');
-
-    console.log(options.arguments);
-    console.log(dcf);
-
-    //TODO: more security checks from observewallets and account_create
+    // TODO: more security checks from observewallets and account_create
     this.props.history.push('/accounts');
     contract
       .deploy({
@@ -407,13 +389,13 @@ class NewWalletContract extends Component {
         console.log('reecipt', receipt);
       })
       .on('confirmation', (confirmationNumber, receipt) => {
-        receipt['confirmationNumber'] = confirmationNumber;
+        receipt.confirmationNumber = confirmationNumber;
         receipt['contract-name'] = dcf['contract-name'];
-        receipt['address'] = receipt.contractAddress;
-        receipt['logs'] = [];
-        receipt['balance'] = 0;
-        receipt['deployedWalletContract'] = true;
-        receipt['jsonInterface'] = JSON.stringify(jsonInterface);
+        receipt.address = receipt.contractAddress;
+        receipt.logs = [];
+        receipt.balance = 0;
+        receipt.deployedWalletContract = true;
+        receipt.jsonInterface = JSON.stringify(jsonInterface);
 
         console.log(receipt);
 
@@ -447,10 +429,205 @@ class NewWalletContract extends Component {
       });
   }
 
+  renderSimpleButton() {
+    const { DeployContractForm } = this.props.reducers;
+    return (
+      <React.Fragment>
+        <FormControlLabel
+          value="simpleChecked"
+          control={
+            <Radio checked={DeployContractForm.simpleChecked} color="primary" />
+          }
+          label="SINGLE OWNER ACCOUNT"
+          name="accountType"
+        />
+        <Collapse in={DeployContractForm.simpleChecked}>
+          <div className="indented-box">
+            <span
+              style={{
+                verticalAlign: 'middle',
+                lineHeight: '35px',
+              }}
+            >
+              Note: If your owner account is compromised, your wallet has no
+              protection.
+            </span>
+          </div>
+        </Collapse>
+      </React.Fragment>
+    );
+  }
+
+  // renderOwnerCounter(type, multiline, counter){
+  //   return (
+  //     <TextField
+  //       select
+  //       data-name={type}
+  //       className="inline-form"
+  //       name={type}
+  //       multiline={multiline}
+  //       value={counter}
+  //       onChange={e => this.handleChange(e)}
+  //     >
+  //       {[...Array(10).keys()].map(num => (
+  //         <MenuItem key={num + 1} value={num + 1}>
+  //           {num + 1}
+  //         </MenuItem>
+  //       ))}
+  //     </TextField>
+  //   )
+  // }
+
+  renderMultiSigButton() {
+    const { DeployContractForm } = this.props.reducers;
+    return (
+      <React.Fragment>
+        <FormControlLabel
+          value="multisigChecked"
+          control={
+            <Radio
+              checked={DeployContractForm.multisigChecked}
+              color="primary"
+            />
+          }
+          label="MULTISIGNATURE WALLET CONTRACT"
+          name="accountType"
+        />
+        <Collapse in={DeployContractForm.multisigChecked}>
+          <div className="indented-box">
+            <p
+              style={{
+                verticalAlign: 'middle',
+                lineHeight: '35px',
+              }}
+            >
+              This is a joint account controlled by &nbsp;
+              {/* {this.renderOwnerCounter("multisigSigneesCount", true, DeployContractForm.multiSigContract.ownerCount)} */}
+              <TextField
+                select
+                data-name="multisigSigneesCount"
+                className="inline-form"
+                name="multisigSigneesCount"
+                multiline
+                value={DeployContractForm.multiSigContract.ownerCount}
+                onChange={e => this.handleChange(e)}
+              >
+                {[...Array(10).keys()].map(num => (
+                  <MenuItem key={num + 1} value={num + 1}>
+                    {num + 1}
+                  </MenuItem>
+                ))}
+              </TextField>
+              owners. You can send up to &nbsp;
+              <TextField
+                value={DeployContractForm.multiSigContract.dailyLimitAmount}
+                onChange={e => this.handleChange(e)}
+                type="number"
+                className="inline-form"
+                name="dailyLimitAmount"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              &nbsp;Ether per day.
+            </p>
+            <p
+              style={{
+                verticalAlign: 'middle',
+                lineHeight: '35px',
+              }}
+            >
+              Any transaction over that daily limit requires the confirmation of
+              &nbsp;
+              {/* {this.renderOwnerCounter("multisigSigneesCount", true, DeployContractForm.multiSigContract.ownerCount)} */}
+              <TextField
+                select
+                data-name="multisigSigneesRequired"
+                className="inline-form"
+                name="multisigSigneesRequired"
+                value={
+                  DeployContractForm.multiSigContract
+                    .confirmationAddressesRequired
+                }
+                onChange={e => this.handleChange(e)}
+              >
+                {[
+                  ...Array(
+                    DeployContractForm.multiSigContract.ownerCount
+                  ).keys(),
+                ].map(num => (
+                  <MenuItem key={num + 1} value={num + 1}>
+                    {num + 1}
+                  </MenuItem>
+                ))}
+              </TextField>
+              &nbsp; owners.
+            </p>
+            <h4>Account owners</h4>
+            {this.renderMultiSigOwners()}
+          </div>
+        </Collapse>
+      </React.Fragment>
+    );
+  }
+
+  renderImportButton() {
+    const { DeployContractForm } = this.props.reducers;
+    return (
+      <React.Fragment>
+        <FormControlLabel
+          value="importWalletChecked"
+          control={
+            <Radio
+              checked={DeployContractForm.importWalletChecked}
+              color="primary"
+            />
+          }
+          label="IMPORT WALLET"
+          name="accountType"
+        />
+        <Collapse in={DeployContractForm.importWalletChecked}>
+          <div className="indented-box">
+            <br />
+            <div className="dapp-address-input">
+              <input
+                type="text"
+                placeholder="Wallet address"
+                className="import"
+                name="importWalletAddress"
+                value={
+                  DeployContractForm.importWalletAddress !== ''
+                    ? DeployContractForm.importWalletAddress
+                    : ''
+                }
+                onChange={e => this.handleChange(e)}
+              />
+            </div>
+            <p className="invalid" />
+          </div>
+        </Collapse>
+      </React.Fragment>
+    );
+  }
+
+  renderCreateButton() {
+    return (
+      <React.Fragment>
+        <button
+          className="dapp-block-button"
+          type="submit"
+          onClick={e => this.createContract(e)}
+        >
+          Create
+        </button>
+      </React.Fragment>
+    );
+  }
+
   render() {
     const { classes } = this.props;
     const { DeployContractForm } = this.props.reducers;
-    let dcf = this.props.reducers.DeployContractForm;
+    const dcf = this.props.reducers.DeployContractForm;
     return (
       <React.Fragment>
         <FormControl component="fieldset" className={classes.formControl}>
@@ -460,7 +637,7 @@ class NewWalletContract extends Component {
             name="WalletContractName"
             placeholder="Wallet contract name"
             onChange={e => this.handleChange(e)}
-            autoFocus={true}
+            autoFocus
           />
           <SelectOwner />
           <div className={classes.radioRoot}>
@@ -496,134 +673,10 @@ class NewWalletContract extends Component {
                   </span>
                 </div>
               </Collapse>
-              <FormControlLabel
-                value="multisigChecked"
-                control={
-                  <Radio
-                    checked={DeployContractForm.multisigChecked}
-                    color="primary"
-                  />
-                }
-                label="MULTISIGNATURE WALLET CONTRACT"
-                name="accountType"
-              />
-              <Collapse in={DeployContractForm.multisigChecked}>
-                <div className="indented-box">
-                  <p
-                    style={{
-                      verticalAlign: 'middle',
-                      lineHeight: '35px',
-                    }}
-                  >
-                    This is a joint account controlled by &nbsp;
-                    <TextField
-                      select
-                      data-name="multisigSigneesCount"
-                      className="inline-form"
-                      name="multisigSigneesCount"
-                      multiline
-                      // className={classes.textField}
-                      value={DeployContractForm.multiSigContract.ownerCount}
-                      onChange={e => this.handleChange(e)}
-                      // margin="normal"
-                      // variant="filled"
-                    >
-                      {[...Array(10).keys()].map(num => (
-                        <MenuItem key={num + 1} value={num + 1}>
-                          {num + 1}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                    owners. You can send up to &nbsp;
-                    <TextField
-                      value={
-                        DeployContractForm.multiSigContract.dailyLimitAmount
-                      }
-                      onChange={e => this.handleChange(e)}
-                      type="number"
-                      className="inline-form"
-                      name="dailyLimitAmount"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                    &nbsp;Ether per day.
-                  </p>
-                  <p
-                    style={{
-                      verticalAlign: 'middle',
-                      lineHeight: '35px',
-                    }}
-                  >
-                    Any transaction over that daily limit requires the
-                    confirmation of &nbsp;
-                    <TextField
-                      select
-                      data-name="multisigSigneesRequired"
-                      className="inline-form"
-                      // data-name="multisigSignatures"
-                      name="multisigSigneesRequired"
-                      value={
-                        DeployContractForm.multiSigContract
-                          .confirmationAddressesRequired
-                      }
-                      onChange={e => this.handleChange(e)}
-                    >
-                      {[
-                        ...Array(
-                          DeployContractForm.multiSigContract.ownerCount
-                        ).keys(),
-                      ].map(num => (
-                        <MenuItem key={num + 1} value={num + 1}>
-                          {num + 1}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                    &nbsp; owners.
-                  </p>
-                  <h4>Account owners</h4>
-                  {this.renderMultiSigOwners()}
-                </div>
-              </Collapse>
-              <FormControlLabel
-                value="importWalletChecked"
-                control={
-                  <Radio
-                    checked={DeployContractForm.importWalletChecked}
-                    color="primary"
-                  />
-                }
-                label="IMPORT WALLET"
-                name="accountType"
-              />
-              <Collapse in={DeployContractForm.importWalletChecked}>
-                <div className="indented-box">
-                  <br />
-                  <div className="dapp-address-input">
-                    <input
-                      type="text"
-                      placeholder="Wallet address"
-                      className="import"
-                      name="importWalletAddress"
-                      value={
-                        DeployContractForm.importWalletAddress !== ''
-                          ? DeployContractForm.importWalletAddress
-                          : ''
-                      }
-                      onChange={e => this.handleChange(e)}
-                    />
-                  </div>
-                  <p className="invalid" />
-                </div>
-              </Collapse>
+              {this.renderMultiSigButton()}
+              {this.renderImportButton()}
             </RadioGroup>
-            <button
-              className="dapp-block-button"
-              type="submit"
-              onClick={e => this.createContract(e)}
-            >
-              Create
-            </button>
+            {this.renderCreateButton()}
           </div>
         </FormControl>
       </React.Fragment>

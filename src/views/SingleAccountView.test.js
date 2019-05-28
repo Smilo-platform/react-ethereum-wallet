@@ -1,14 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-
 import fetchMock from 'fetch-mock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
-const middlewares = [thunk];
-const mockStore = configureMockStore(middlewares);
-
-import { SecurityIcon } from '../components/elements/SecurityIcon.js';
+import { SecurityIcon } from '../components/elements/SecurityIcon';
 
 describe('title html', () => {
   afterEach(() => {
@@ -22,7 +15,7 @@ describe('title html', () => {
           <SecurityIcon
             type="singleAccountView"
             classes="dapp-identicon"
-            hash={'0x0000000000000000000000000000000000000000'}
+            hash="0x0000000000000000000000000000000000000000"
           />
         </div>
       )
@@ -43,7 +36,7 @@ describe('account information', () => {
           </h1>
           <h2 className="copyable-address">
             <i className="icon-key" title="Account" />
-            <span>{'0x0000000000000000000000000000000000000000'}</span>
+            <span>0x0000000000000000000000000000000000000000</span>
           </h2>
           <div className="clear" />
         </React.Fragment>
@@ -60,13 +53,13 @@ describe('renders sticky container', () => {
         <div className="account-info">
           <h3>NOTE </h3>
           <p>
-            Accounts can't display incoming transactions, but can receive, hold
-            and send Ether. To see incoming transactions create a wallet
+            Accounts can&apos;t display incoming transactions, but can receive,
+            hold and send Ether. To see incoming transactions create a wallet
             contract to store ether.
           </p>
           <p>
-            If your balance doesn't seem updated, make sure that you are in sync
-            with the network.
+            If your balance doesn&apos;t seem updated, make sure that you are in
+            sync with the network.
           </p>
         </div>
       )

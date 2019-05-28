@@ -1,23 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import ContractItem from './elements/ContractItem.js';
 import { Link } from 'react-router-dom';
+import ContractItem from './elements/ContractItem';
+import ButtonDescription from './ButtonDescription';
 
-// snapshotted
-const WalletDescription = () => {
-  return (
-    <React.Fragment>
-      <h2>Wallet Contracts</h2>
-      <p>
-        These contracts are stored on the blockchain and can hold and secure
-        Ether. They can have multiple accounts as owners and keep a full log of
-        all transactions.
-      </p>
-      <div className="dapp-clear-fix" />
-    </React.Fragment>
-  );
-};
+const buttonTitle = 'Wallet Contracts';
+const buttonDescription =
+  'These contracts are stored on the blockchain and can hold and secure Ether. They can have multiple accounts as owners and keep a full log of all transactions.';
 
 // snapshooted
 const WalletLink = () => {
@@ -35,14 +25,14 @@ const WalletLink = () => {
   );
 };
 
-class DeployedWallets extends Component {
+export class DeployedWallets extends Component {
   renderWalletBoxList() {
     const icon = 'icon-eye';
-    let {
+    const {
       ContractsPendingConfirmations,
       WalletContracts,
     } = this.props.reducers;
-    let contracts = Object.assign(
+    const contracts = Object.assign(
       {},
       ContractsPendingConfirmations,
       WalletContracts
@@ -56,10 +46,10 @@ class DeployedWallets extends Component {
               number={i + 1}
               icon={icon}
               pending={
-                Object.keys(contracts[address]).length === 0 &&
-                contracts[address].constructor === Object
-                  ? true
-                  : false
+                !!(
+                  Object.keys(contracts[address]).length === 0 &&
+                  contracts[address].constructor === Object
+                )
               }
               contract={contracts[address]}
               address={address}
@@ -77,7 +67,10 @@ class DeployedWallets extends Component {
   render() {
     return (
       <React.Fragment>
-        <WalletDescription />
+        <ButtonDescription
+          title={buttonTitle}
+          description={buttonDescription}
+        />
         {this.renderWalletBoxList()}
         <WalletLink />
       </React.Fragment>

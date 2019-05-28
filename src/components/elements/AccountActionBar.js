@@ -2,22 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import * as Actions from '../../actions/actions.js';
+import * as Actions from '../../actions/actions';
 
-const ListItem = props => {
-  return (
-    <li>
-      <a
-        href={props.href}
-        title={props.title}
-        target="noopener noreferrer _blank"
-      >
-        <i className={props.icon} />
-        {props.text}
-      </a>
-    </li>
-  );
-};
+import ActionBarItem from './ActionBarItem';
 
 export class AccountActionBar extends Component {
   shouldComponentUpdate(prevProps, prevState) {
@@ -42,31 +29,28 @@ export class AccountActionBar extends Component {
   }
 
   render() {
-    let address = this.props.wallet.address;
-    let etherScanAddress = 'https://etherscan.io/address/' + address;
-    let transferEtherAddress = '/send/' + address;
-    let changellyAddress =
-      'https://changelly.com/widget/v1?auth=email&amp;from=USD&amp;to=ETH&amp;merchant_id=47f87f7cddda&amp;address=' +
-      address +
-      '&amp;amount=1&amp;ref_id=e25c5a2e8719&amp;color=02a8f3';
+    const address = this.props.wallet.address;
+    const etherScanAddress = `https://etherscan.io/address/${address}`;
+    const transferEtherAddress = `/send/${address}`;
+    const changellyAddress = `https://changelly.com/widget/v1?auth=email&amp;from=USD&amp;to=ETH&amp;merchant_id=47f87f7cddda&amp;address=${address}&amp;amount=1&amp;ref_id=e25c5a2e8719&amp;color=02a8f3`;
 
     return (
       <aside className="dapp-actionbar">
         <nav>
           <ul>
-            <ListItem
+            <ActionBarItem
               href={transferEtherAddress}
               title={address}
               icon="icon-arrow-down"
               text=" Transfer Ether &amp; Tokens"
             />
-            <ListItem
+            <ActionBarItem
               href={changellyAddress}
               title=""
               icon="icon-ethereum"
               text="Buy ether"
             />
-            <ListItem
+            <ActionBarItem
               href={etherScanAddress}
               icon="icon-info"
               text="View on Etherscan"

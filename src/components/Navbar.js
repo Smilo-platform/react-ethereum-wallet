@@ -2,18 +2,29 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import SU from './elements/SelectableUnit.js';
 import { Link } from 'react-router-dom';
 import '../stylesheets/navbar.css';
-import { NavFields } from '../constants/FieldConstants.js';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import SettingsSharp from '@material-ui/icons/SettingsSharp';
 import IconButton from '@material-ui/core/IconButton';
 
-import * as Utils from '../utils/utils.js';
-
 import NumberFormat from 'react-number-format';
+import { displayPriceFormatter } from '../utils/utils';
+
+import { NavFields } from '../constants/FieldConstants';
+import SU from './elements/SelectableUnit';
+
+const HeaderField = field => {
+  return (
+    <li className={field.liClass}>
+      <Link to={field.href}>
+        <i className={field.icon} />
+        <span>{field.displayText}</span>
+      </Link>
+    </li>
+  );
+};
 
 export class NavBar extends Component {
   constructor(props) {
@@ -43,7 +54,7 @@ export class NavBar extends Component {
       this.interval = setInterval(() => {
         time += 1;
         let text = 's since last block';
-        if (3600 > time > 59) {
+        if (time < 3600 > 59) {
           time = Math.floor(time / 60);
           text = ' minutes since last block';
         }
@@ -62,7 +73,7 @@ export class NavBar extends Component {
   }
 
   handleScroll() {
-    let scrollPosition = window.scrollY;
+    const scrollPosition = window.scrollY;
     if (scrollPosition > 150) {
       this.setState({ small: true, sticky: true });
     } else if (scrollPosition > 48) {
@@ -93,27 +104,19 @@ export class NavBar extends Component {
     this.props.history.push('/');
   }
 
-  renderBalanceHeader(field) {
+  renderBalanceHeader() {
     return (
-      <li className={field.liClass}>
-        <h3>{field.firstText}</h3>
-        <span className={field.firstClass}>
-          {this.props.web3 && this.props.web3.web3Instance ? (
-            <NumberFormat
-              value={Utils.displayPriceFormatter(
-                this.props,
-                this.props.reducers.totalBalance
-              )}
-              displayType={'text'}
-              thousandSeparator={true}
-            />
-          ) : (
-            <NumberFormat
-              value={this.props.reducers.totalBalance}
-              displayType={'text'}
-              thousandSeparator={true}
-            />
-          )}
+      <li className="balance-nav-li wallet-balance">
+        <h3>Balance</h3>
+        <span className="account-balance">
+          <NumberFormat
+            value={displayPriceFormatter(
+              this.props,
+              this.props.reducers.totalBalance
+            )}
+            displayType="text"
+            thousandSeparator
+          />
           &nbsp;
           <span className="inline-form" name="unit">
             <button
@@ -135,7 +138,7 @@ export class NavBar extends Component {
     const inlineStyle = { marginLeft: '10px' };
     return (
       <React.Fragment>
-        <li className={field.liClass}>
+        <li className="block-info dapp-flex-item">
           <Tooltip title="Change Network">
             <IconButton
               aria-label="Delete"
@@ -144,25 +147,24 @@ export class NavBar extends Component {
               <SettingsSharp />
             </IconButton>
           </Tooltip>
-          <i className={field.firstIcon} />
-          <span style={inlineStyle} className={field.secondClass}>
+          <i className="icon-feed" />
+          <span style={inlineStyle} className="hide-on-small">
             {this.props.reducers.peerCount}
-            &nbsp;
-            {field.firstText}
+            &nbsp; peers
           </span>
           &nbsp; &nbsp;| &nbsp; &nbsp;
-          <i className={field.secondIcon} />
+          <i className="icon-layers" />
           <span>&nbsp; {this.props.reducers.blockHeader.number}</span>
-          <i className={field.thirdIcon} style={inlineStyle} />
-          <span className={field.secondClass}>&nbsp; {this.state.time}</span>
+          <i className="icon-clock" style={inlineStyle} />
+          <span className="hide-on-small">&nbsp; {this.state.time}</span>
         </li>
       </React.Fragment>
     );
   }
 
   render() {
-    var cn = require('classnames');
-    var newStyles = cn({
+    const cn = require('classnames');
+    const newStyles = cn({
       'dapp-header': true,
       'dapp-sticky-bar': true,
       'dapp-small': this.state.small,
@@ -174,9 +176,9 @@ export class NavBar extends Component {
           <ul>
             {this.renderHeaderField(NavFields.Wallet)}
             {this.renderHeaderField(NavFields.Send)}
-            {this.renderNetworkHeader(NavFields.PeerInfo)}
+            {this.renderNetworkHeader()}
             {this.renderHeaderField(NavFields.Contracts)}
-            {this.renderBalanceHeader(NavFields.BalanceInfo)}
+            {this.renderBalanceHeader()}
           </ul>
         </nav>
       </header>

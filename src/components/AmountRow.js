@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import RadioTokenSelect from './elements/RadioTokenSelect.js';
-import { updateTransactionToSend } from '../actions/actions.js';
-import { displayPriceFormatter } from '../utils/utils.js';
 import Web3 from 'web3';
+import RadioTokenSelect from './elements/RadioTokenSelect';
+import { updateTransactionToSend } from '../actions/actions';
+import { displayPriceFormatter } from '../utils/utils';
 
 export class AmountRow extends Component {
   constructor(props) {
@@ -18,22 +18,21 @@ export class AmountRow extends Component {
   handleOnKeyUp(e) {
     // TODO:validate inputs here
     // let web3 = this.props.web3.web3Instance;
-    let tx = this.props.TransactionToSend;
+    const tx = this.props.TransactionToSend;
     let target = e.target.getAttribute('name');
     let targetValue = e.target.value;
 
-    //TODO: still not to validate, but allow single decimal
+    // TODO: still not to validate, but allow single decimal
     if (targetValue.includes('.')) {
-      console.log('in includes decimal');
-      let web3 = new Web3();
-      let eth = targetValue.split('.')[0];
+      const web3 = new Web3();
+      const eth = targetValue.split('.')[0];
 
-      let wei = web3.utils.toWei(eth, 'ether');
-      let subEth = targetValue.split('.')[1];
+      const wei = web3.utils.toWei(eth, 'ether');
+      const subEth = targetValue.split('.')[1];
     }
 
     if (target === 'value' && this.props.web3 && targetValue && !tx.sendToken) {
-      let web3 = this.props.web3.web3Instance;
+      const web3 = this.props.web3.web3Instance;
       targetValue = web3.utils.toWei(targetValue, 'ETHER');
     }
 
@@ -48,7 +47,7 @@ export class AmountRow extends Component {
   }
 
   toggleCheckbox(e) {
-    let wallet = this.props.TransactionToSend;
+    const wallet = this.props.TransactionToSend;
     this.props.updateTransactionToSend({
       name: 'value',
       value: this.state.checkbox ? this.props.Wallets[wallet.from] : 0,
@@ -68,7 +67,6 @@ export class AmountRow extends Component {
           placeholder="0.0"
           className="dapp-large"
           pattern="[0-9\.,]*"
-          // value={this.props.reducers.TransactionToSend.value || 0}
           onKeyUp={e => this.handleOnKeyUp(e)}
         />
         <br />
@@ -85,71 +83,53 @@ export class AmountRow extends Component {
   }
 
   renderAmountSummary() {
-    let tx = this.props.TransactionToSend;
+    const tx = this.props.TransactionToSend;
+    const currency = this.props.reducers.currency;
     return (
       <p className="send-info">
         You want to send
-        {!tx.sendToken ? (
-          <strong>
-            {this.props.web3 && this.props.web3.web3Instance
-              ? ' ' +
-                displayPriceFormatter(this.props, tx.value) +
-                ' ' +
-                this.props.reducers.currency
-              : 0 + ' ' + this.props.reducers.currency}
-          </strong>
-        ) : (
-          <strong>
-            &nbsp;
-            {tx.tokenAmount}
-            &nbsp;
-            {tx.tokenToSend.symbol}
-          </strong>
-        )}
-        {/*
-          {' '}
-        in Ether, using exchange rates from
-        <a
-          href="https://www.cryptocompare.com/coins/eth/overview/BTC"
-          target="noopener noreferrer _blank"
-        >
-          {' '}
-          cryptocompare.com
-        </a>
-        .<br />
-        Which is currently an equivalent of
         <strong>
-          {this.props.web3 && this.props.web3.web3Instance
-            ? ' ' +
-              Utils.displayPriceFormatter(
-                this.props,
-                this.props.reducers.TransactionToSend.value,
-                'ETHER'
-              ) +
-              ' ETHER'
-            : 0 + ' ETHER'}
+          {!tx.sendToken ? (
+            ` ${displayPriceFormatter(this.props, tx.value)} ${currency}`
+          ) : (
+            <React.Fragment>
+              &nbsp; {tx.tokenAmount}
+              &nbsp; {tx.tokenToSend.symbol}
+            </React.Fragment>
+          )}
         </strong>
-      */}
         .
       </p>
     );
   }
 
-  renderEtherValue() {
-    let wallets = this.props.Wallets;
-    // let wallet = this.state.fromWallet
-    let wallet = this.props.TransactionToSend.from;
+  renderEtherBalance() {
+    const wallets = this.props.Wallets;
+    const wallet = this.props.TransactionToSend.from;
+    const currency = this.props.reducers.currency;
+    const balance = wallets[wallet].balance;
+    return (
+      <div className="token-ether">
+        <span className="ether-symbol">Ξ</span>
+        <span className="token-name">ETHER</span>
+        <span className="balance">
+          {` ${displayPriceFormatter(
+            this.props,
+            balance
+          )} ${currency} (${displayPriceFormatter(
+            this.props,
+            balance,
+            'ETHER'
+          )}ETHER)`}
+        </span>
+      </div>
+    );
+  }
 
-    let tokens = wallets[wallet] ? wallets[wallet].tokens : undefined;
-
-    if (!tokens) {
-      //TODO: this is getting updated infinitely and kills app
-      // this.props.updateTokenToSend({
-      //   sendToken: false,
-      //   tokenToSend: {},
-      // });
-    }
-
+  renderEtherDropDown() {
+    const wallets = this.props.Wallets;
+    const wallet = this.props.TransactionToSend.from;
+    const tokens = wallets[wallet] ? wallets[wallet].tokens : undefined;
     return (
       <div className="col col-6 mobile-full">
         <br />
@@ -157,30 +137,7 @@ export class AmountRow extends Component {
         {tokens ? (
           <RadioTokenSelect wallet={wallet} tokens={tokens} />
         ) : (
-          <div className="token-ether">
-            <span className="ether-symbol">Ξ</span>
-            <span className="token-name">ETHER</span>
-            <span className="balance">
-              {this.props.web3 && this.props.web3.web3Instance
-                ? ' ' +
-                  displayPriceFormatter(
-                    this.props,
-                    // wallets[this.state.fromWallet].balance
-                    wallets[wallet].balance
-                  ) +
-                  ' ' +
-                  this.props.reducers.currency +
-                  ' (' +
-                  displayPriceFormatter(
-                    this.props,
-                    // wallets[this.state.fromWallet].balance,
-                    wallets[wallet].balance,
-                    'ETHER'
-                  ) +
-                  'ETHER)'
-                : '5,538.38 USD (26.41223000001 ETHER)'}
-            </span>
-          </div>
+          this.renderEtherBalance()
         )}
       </div>
     );
@@ -193,7 +150,7 @@ export class AmountRow extends Component {
           {this.renderAmount()}
           {this.renderAmountSummary()}
         </div>
-        {this.renderEtherValue()}
+        {this.renderEtherDropDown()}
         <div className="dapp-clear-fix" />
       </div>
     );

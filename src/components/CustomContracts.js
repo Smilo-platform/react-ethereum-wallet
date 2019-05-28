@@ -1,56 +1,32 @@
 import React, { Component } from 'react';
 import isEqual from 'lodash/isEqual';
 import { connect } from 'react-redux';
-import compose from 'recompose/compose';
 import shortid from 'shortid';
-import { withStyles } from '@material-ui/core/styles';
-import ContractItem from './elements/ContractItem.js';
-import { ContractSectionList } from './../constants/FieldConstants.js';
-import * as Actions from './../actions/actions.js';
+import ContractItem from './elements/ContractItem';
+import ButtonDescription from './ButtonDescription';
+import { displayModal } from '../actions/actions';
 
-const styles = theme => ({
-  button: {
-    margin: theme.spacing.unit,
-  },
-  extendedIcon: {
-    marginRight: theme.spacing.unit,
-  },
-});
+const buttonTitle = 'Custom Contracts';
+const buttonDescription =
+  'To watch and interact with a contract already deployed on the blockchain, you need to know its address and the description of its interface in JSON format.';
 
-const ContractDescription = () => {
-  let CC = ContractSectionList.CustomContracts;
-  return (
-    <React.Fragment>
-      <h2>{CC.title}</h2>
-      <p>{CC.contractDescription}</p>
-      <div className="dapp-clear-fix" />
-    </React.Fragment>
-  );
-};
-
-class CustomContracts extends Component {
+export class CustomContracts extends Component {
   shouldComponentUpdate(prevProps, prevState) {
-    if (
-      !isEqual(
-        prevProps.reducers.ObservedContracts,
-        this.props.reducers.ObservedContracts
-      )
-    ) {
+    if (!isEqual(prevProps.ObservedContracts, this.props.ObservedContracts)) {
       return true;
     }
     return false;
   }
 
   renderWatchContractButton() {
-    let CC = ContractSectionList.CustomContracts;
     return (
       <React.Fragment>
         <button
-          className={CC.buttonClass}
+          className="wallet-box create add-contract"
           onClick={() => this.props.displayModal('displayWatchContract')}
         >
           <div className="account-pattern">+</div>
-          <h3>{CC.buttonDescription}</h3>
+          <h3>WATCH CONTRACT</h3>
         </button>
         <div className="dapp-clear-fix" />
       </React.Fragment>
@@ -58,20 +34,15 @@ class CustomContracts extends Component {
   }
 
   renderObservedContracts() {
-    let obj = this.props.reducers;
-    if (
-      obj.ObservedContracts !== undefined &&
-      Object.keys(obj.ObservedContracts).length !== 0
-    ) {
-      const contracts = this.props.reducers.ObservedContracts;
-      console.log('RENDERING OBSERVED Contracts', contracts);
+    const oc = this.props.ObservedContracts;
+    if (oc !== undefined && Object.keys(oc).length !== 0) {
       return (
         <React.Fragment>
           <div className="wallet-box-list">
-            {Object.keys(contracts).map(contract => (
+            {Object.keys(oc).map(contract => (
               <ContractItem
                 key={shortid.generate()}
-                contract={contracts[contract]}
+                contract={oc[contract]}
                 addressType="ObservedContracts"
               />
             ))}
@@ -84,7 +55,10 @@ class CustomContracts extends Component {
   render() {
     return (
       <div className="contracts-view-custom-contracts">
-        <ContractDescription />
+        <ButtonDescription
+          title={buttonTitle}
+          description={buttonDescription}
+        />
         {this.renderObservedContracts()}
         {this.renderWatchContractButton()}
       </div>
@@ -92,14 +66,11 @@ class CustomContracts extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return state;
-};
+const mapStateToProps = state => ({
+  ObservedContracts: state.reducers.ObservedContracts,
+});
 
-export default compose(
-  withStyles(styles, { name: 'CustomContracts' }),
-  connect(
-    mapStateToProps,
-    { ...Actions }
-  )
+export default connect(
+  mapStateToProps,
+  { displayModal }
 )(CustomContracts);

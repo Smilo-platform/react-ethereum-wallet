@@ -1,4 +1,4 @@
-//"0x11485c5f164d6a67a72eee9093b2581d1c304094"
+// "0x11485c5f164d6a67a72eee9093b2581d1c304094"
 
 // Token Interface
 
@@ -155,6 +155,14 @@ export const tokenInterface = [
         type: 'uint256',
       },
     ],
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{ name: '', type: 'uint256' }],
+    payable: false,
     type: 'function',
   },
 ];

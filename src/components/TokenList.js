@@ -7,40 +7,60 @@ import { Identicon } from 'ethereum-react-components';
 import shortid from 'shortid';
 
 export class TokenList extends Component {
-  render() {
-    let sw = this.props.reducers.selectedWallet;
-    //TODO: what if selected contract
-    let tokens = this.props.reducers.selectedWallet.wallet.tokens;
-    let sendUrl = sw.address + '/';
+  // TODO: turn these renders into stateless
+  renderIdentity(token) {
+    const tokens = this.props.reducers.selectedWallet.wallet.tokens;
+    return (
+      <td>
+        <Identicon
+          classes="dapp-identicon dapp-tiny"
+          title
+          size="tiny"
+          address={tokens[token].address}
+        />
+        <strong>{tokens[token].name}</strong>
+      </td>
+    );
+  }
 
+  renderInfo(token) {
+    const tokens = this.props.reducers.selectedWallet.wallet.tokens;
+    return (
+      <td>
+        {tokens[token].balance}
+        &nbsp;
+        {tokens[token].symbol}
+      </td>
+    );
+  }
+
+  renderLink(token) {
+    const sw = this.props.reducers.selectedWallet;
+    const sendUrl = `${sw.address}/`;
+    return (
+      <td>
+        <Link
+          to={{ pathname: `/send-token/${sendUrl}${token}` }}
+          title="sendUrlForToken"
+        >
+          <i className="icon-arrow-up">&nbsp;</i>
+          Send
+        </Link>
+      </td>
+    );
+  }
+
+  render() {
+    // TODO: what if selected contract
+    const tokens = this.props.reducers.selectedWallet.wallet.tokens;
     return (
       <table className="token-list dapp-zebra">
         <tbody>
           {Object.keys(tokens).map(token => (
             <tr key={shortid.generate()}>
-              <td>
-                <Identicon
-                  classes="dapp-identicon dapp-tiny"
-                  title
-                  size="tiny"
-                  address={tokens[token].address}
-                />
-                <strong>{tokens[token].name}</strong>
-              </td>
-              <td>
-                {tokens[token].balance}
-                &nbsp;
-                {tokens[token].symbol}
-              </td>
-              <td>
-                <Link
-                  to={{ pathname: '/send-token/' + sendUrl + token }}
-                  title="sendUrlForToken"
-                >
-                  <i className="icon-arrow-up">&nbsp;</i>
-                  Send
-                </Link>
-              </td>
+              {this.renderIdentity(token)}
+              {this.renderInfo(token)}
+              {this.renderLink(token)}
             </tr>
           ))}
         </tbody>

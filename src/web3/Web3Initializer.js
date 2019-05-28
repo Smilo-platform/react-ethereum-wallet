@@ -1,42 +1,30 @@
-import { store } from '../store/store.js';
 import Web3 from 'web3';
+import { store } from '../store/store';
 
-let ethereumConnection = null;
+const ethereumConnection = null;
 
 export default class Web3Initializer {
   static init() {
-    let config = store.getState().reducers.Web3Initializer;
+    const config = store.getState().reducers.Web3Initializer;
     let ProviderNetwork = '';
 
     console.log('ethereumConnection', ethereumConnection);
     if (ethereumConnection === null) {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         return resolve(new Web3('ws://localhost:8546'));
       }).then((err, res) => {
         if (err) console.warn('yes here is err', err);
         if (res) console.log('here is res', res);
       });
-
-      // console.log(eth)
-
-      // console.log("ethereumConnection", ethereumConnection)
-      // ethereumConnection = new Web3('ws://localhost:8546');
-      // console.log('ethereumConnection', ethereumConnection);
-      // ethereumConnection.eth.isSyncing().then(console.log);
-      // console.log(ethereumConnection._provider.connected);
-      // return ethereumConnection;
     }
 
     console.log('here is config', config);
-    let prov = config.selectedProvider.toLowerCase();
+    const prov = config.selectedProvider.toLowerCase();
     if (prov === 'geth' || prov === 'parity' || prov === 'ganache') {
-      ProviderNetwork = 'ws://127.0.0.1:' + config.selectedPort;
-    }
-    if (prov.toLowerCase() === 'metamask') {
+      ProviderNetwork = `ws://127.0.0.1:${config.selectedPort}`;
     }
     if (prov.toLowerCase() === 'infura') {
-      ProviderNetwork =
-        'wss://' + config.selectedNetwork.toLowerCase() + '.infura.io/ws';
+      ProviderNetwork = `wss://${config.selectedNetwork.toLowerCase()}.infura.io/ws`;
     }
 
     return ProviderNetwork;
